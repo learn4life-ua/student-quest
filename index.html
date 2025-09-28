@@ -20,47 +20,49 @@
       --warn-bg:#fffbeb;    /* amber-50 */
     }
 
-    /* Dark theme overrides */
-    body.dark {
-      --bg: #0b1220;
-      --text: #cbd5e1;
-      --muted:#94a3b8;
-      --card:#0f172a;
-      --border:#1e29b3;
-      --brand:#3b82f6;
-      --accent:#ef4444;
-      --good:#22c55e;
-      --good-bg:#052e1a;
-      --bad-bg:#2a0c0c;
-      --warn:#f59e0b;
-      --warn-bg:#2a1b06;
-    }
-
     * { box-sizing: border-box; }
     body {
       margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
       'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
       background: var(--bg); color: var(--text); line-height: 1.6;
-      transition: background-color 0.3s, color .3s;
     }
     .container { max-width: 980px; margin: 24px auto; padding: 0 16px; }
 
-    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px}
-    .topbar .right{display:flex; align-items:center; gap:10px}
-
-    .progress-container { width: 100%; background: var(--border); border-radius: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,.08); }
-    .progress-wrap{display:flex; align-items:center; gap:10px; margin-bottom: 14px;}
+    .progress-container { width: 100%; background: var(--border); border-radius: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,.08); margin-bottom: 20px; }
     .progress-bar { width: 0%; height: 28px; border-radius: 12px; color: #fff; font-weight: 700; background: linear-gradient(45deg, var(--brand), #1a4365); text-align: center; line-height: 28px; transition: width .4s ease; white-space: nowrap; overflow: hidden; }
-    body.dark .progress-bar{ background: linear-gradient(45deg, var(--brand), #1e40af); }
-    .time-pill{min-width:92px; text-align:center; padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-weight:700;}
-
-    .task-block { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 32px; margin: 18px 0; box-shadow: 0 6px 18px rgba(0,0,0,.06); transition: transform 0.3s, box-shadow 0.3s; }
+    
+    .task-block { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin: 18px 0; box-shadow: 0 6px 18px rgba(0,0,0,.06); }
     .task-block h1, .task-block h2 { color: var(--brand); text-align: center; margin: 0 0 12px; }
     .task-block p { color: var(--muted); margin: 8px 0; }
     .task-block .question-text { font-weight: 700; text-align: center; font-size: 1.2rem; margin: 16px 0 24px; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 10px; }
 
-    .choices-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 16px; }
-    .choice-card { background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; font-weight: 700; min-height: 88px; display: flex; align-items: center; justify-content: center; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .choices-container {
+      display: grid;
+      grid-template-columns: 1fr; /* Одна колонка для мобільних за замовчуванням */
+      gap: 16px;
+      align-items: stretch;
+    }
+    
+    /* Для екранів, ширших за 600px, робимо сітку 2x2 */
+    @media (min-width: 600px) {
+      .choices-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .choice-card { 
+      background: var(--bg); 
+      border: 2px solid var(--border); 
+      border-radius: 12px; 
+      padding: 16px; 
+      cursor: pointer; 
+      text-align: center; 
+      font-weight: 700; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; 
+    }
     .choice-card:hover { transform: translateY(-3px); border-color: var(--brand); box-shadow: 0 10px 22px rgba(0,0,0,.08); }
     .choice-card.selected.correct { border-color: var(--good); background-color: var(--good-bg); }
     .choice-card.selected.incorrect { border-color: var(--accent); background-color: var(--bad-bg); cursor: not-allowed; }
@@ -68,12 +70,9 @@
     .center { text-align: center; }
     .btn { background: var(--brand); color:#fff; border:0; border-radius:10px; padding: 10px 16px; font-weight: 700; cursor: pointer; transition: transform .15s ease, background .2s ease; display:inline-block; }
     .btn:hover { background: #1a4365; transform: translateY(-2px); }
-    body.dark .btn:hover { background: #60a5fa; }
     .btn.accent { background-color: var(--accent); }
     .btn.accent:hover { background-color: #8e1c1a; }
-    body.dark .btn.accent:hover { background-color: #b91c1c; }
-    .btn.ghost{background:transparent; color: var(--text); border:1px solid var(--border)}
-
+    
     .muted { font-size: .95rem; color: var(--muted); }
 
     /* modal */
@@ -87,36 +86,22 @@
     .score-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--good-bg); color: var(--good); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 12px auto; font-size: 2rem; font-weight: bold; border: 4px solid var(--good); }
     .score-circle.medium { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
     .score-circle.low { background: var(--bad-bg); color: var(--accent); border-color: var(--accent); }
-    .summary-table{ width:100%; border-collapse: collapse; margin-top: 12px; }
-    .summary-table th, .summary-table td{ border:1px solid var(--border); padding:8px 10px; text-align:left; }
-    .summary-table th{ background: var(--bg); }
-    .summary-table td:nth-child(4) { text-align: center; }
-
+    .summary-text { padding: 10px 16px; margin-top: 20px; border-radius: 12px; background-color: var(--bg); border-left: 4px solid var(--brand); text-align: left; }
+    
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="topbar">
-      <div class="left muted">Тема: Академічна доброчесність</div>
-      <div class="right">
-        <span class="time-pill" id="timePill">00:00</span>
-        <button class="btn ghost" id="themeBtn">🌙 Нічна тема</button>
-      </div>
-    </div>
-
     <!-- ПРОГРЕС -->
-    <div class="progress-wrap">
-      <div class="progress-container" aria-hidden="true" style="flex:1"><div class="progress-bar" id="progressBar">Готово: 0%</div></div>
-    </div>
+    <div class="progress-container" aria-hidden="true"><div class="progress-bar" id="progressBar">Готово: 0%</div></div>
 
     <!-- ВСТУП -->
     <section class="task-block" id="intro">
       <h1>🎓 Онлайн-квест: Академічна доброчесність</h1>
-      <p class="center">Вітаємо! На вас чекає 5 станцій-випробувань. Оберіть правильний варіант, щоб перейти далі. Наприкінці отримаєте результат і зможете переглянути поради.</p>
+      <p class="center">Вітаємо! На вас чекає 8 станцій-випробувань. Оберіть правильний варіант, щоб перейти далі.</p>
       <div class="center" style="margin-top:12px">
         <button class="btn accent" id="startBtn">Почати квест</button>
       </div>
-      <p class="center muted" style="margin-top:10px">Оптимізовано для телефона. Час проходження буде зафіксовано.</p>
     </section>
 
     <!-- Q1 -->
@@ -170,32 +155,66 @@
     <!-- Q5 -->
     <section class="task-block" id="q5" hidden>
       <h2>Станція 5</h2>
-      <p class="question-text">🤝 Кейс: одногрупник просить «перекинути» готову контрольну. Як діяти?</p>
+      <p class="question-text">🤝 Одногрупник просить вашу контрольну, щоб "просто подивитись". Як діяти?</p>
       <div class="choices-container">
-        <div class="choice-card" data-correct="true" data-choice="1">Відмовити, пояснити правила доброчесності та запропонувати допомогу в підготовці</div>
-        <div class="choice-card" data-correct="false" data-choice="2">Надіслати файл, але попросити не копіювати дослівно</div>
+        <div class="choice-card" data-correct="true" data-choice="1">Відмовити, але запропонувати разом розібратися зі складними моментами</div>
+        <div class="choice-card" data-correct="false" data-choice="2">Надіслати, але попросити не копіювати дослівно</div>
         <div class="choice-card" data-correct="false" data-choice="3">Викласти роботу у спільний чат для всіх</div>
         <div class="choice-card" data-correct="false" data-choice="4">Помінятися роботами — сьогодні твоя, завтра моя</div>
+      </div>
+    </section>
+    
+    <!-- Q6 -->
+    <section class="task-block" id="q6" hidden>
+      <h2>Станція 6</h2>
+      <p class="question-text">📝 Ви написали гарний твір з історії. Чи можна здати цю ж роботу на мистецтво, трохи змінивши її?</p>
+      <div class="choices-container">
+        <div class="choice-card" data-correct="false" data-choice="1">Так, якщо викладачі не спілкуються між собою.</div>
+        <div class="choice-card" data-correct="false" data-choice="2">Так, адже це моя власна робота, я можу використовувати її де завгодно.</div>
+        <div class="choice-card" data-correct="true" data-choice="3">Ні, це вважається самоплагіатом. Кожне завдання вимагає нової, оригінальної роботи.</div>
+        <div class="choice-card" data-correct="false" data-choice="4">Так, якщо суттєво переписати вступ і висновки.</div>
+      </div>
+    </section>
+
+    <!-- Q7 -->
+    <section class="task-block" id="q7" hidden>
+      <h2>Станція 7</h2>
+      <p class="question-text">🧑‍🤝‍🧑 Де проходить межа між допомогою одногрупнику та недоброчесністю?</p>
+      <div class="choices-container">
+        <div class="choice-card" data-correct="true" data-choice="1">Допомагати — це пояснювати тему та ідеї. Недоброчесність — це давати списувати або виконувати завдання за когось.</div>
+        <div class="choice-card" data-correct="false" data-choice="2">Якщо разом робите завдання, можна здавати однаковий результат.</div>
+        <div class="choice-card" data-correct="false" data-choice="3">Межі немає, головне — щоб уся група отримала гарні оцінки.</div>
+        <div class="choice-card" data-correct="false" data-choice="4">Допомагати можна лише тим, хто допоможе тобі у відповідь.</div>
+      </div>
+    </section>
+    
+    <!-- Q8 -->
+    <section class="task-block" id="q8" hidden>
+      <h2>Станція 8</h2>
+      <p class="question-text">⚖️ Які можуть бути наслідки за плагіат в індивідуальному завданні?</p>
+      <div class="choices-container">
+        <div class="choice-card" data-correct="false" data-choice="1">Лише погана оцінка за роботу.</div>
+        <div class="choice-card" data-correct="false" data-choice="2">Ніяких, якщо це перший випадок.</div>
+        <div class="choice-card" data-correct="true" data-choice="3">Від повторного виконання завдання до відрахування з коледжу.</div>
+        <div class="choice-card" data-correct="false" data-choice="4">Це вплине лише на стосунки з викладачем.</div>
       </div>
     </section>
 
     <!-- SUMMARY -->
     <section class="task-block" id="summary" hidden>
       <h1>🎉 Квест завершено!</h1>
-      <div id="scoreCircle" class="score-circle">5/5</div>
+      <div id="scoreCircle" class="score-circle">8/8</div>
       <p id="scoreLine" class="center" style="font-weight:700; font-size: 1.2rem;">Ваш результат чудовий!</p>
       <p class="center muted" id="timeLine">Час проходження: 00:00</p>
+      <p class="center muted" id="attemptsLine">Загальна кількість спроб: 8</p>
+      
+      <div class="summary-text">
+        <p style="margin-top:0; color:var(--text); font-weight: bold;">Чому це важливо для вас як майбутнього фахівця?</p>
+        <p style="color:var(--muted); margin-bottom:0;">Академічна доброчесність — це не просто правила коледжу. Це тренування вашої професійної етики. Роботодавці цінують чесних та надійних спеціалістів. Ваша репутація, закладена сьогодні, стане основою довіри та поваги у вашій майбутній кар'єрі.</p>
+      </div>
 
-      <table class="summary-table" id="reviewTable">
-        <thead>
-          <tr><th>№</th><th>Статус</th><th>Ваш вибір</th><th>Спроб</th><th>Коментар</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <div class="center" style="margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap">
+      <div class="center" style="margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap">
         <button class="btn" id="copyBtn">Скопіювати результат</button>
-        <button class="btn ghost" id="shareBtn">Поділитися…</button>
         <button class="btn accent" id="restartBtn">Пройти ще раз</button>
       </div>
     </section>
@@ -211,7 +230,7 @@
     </div>
   </div>
   
-  <!-- Copy/Share Modal -->
+  <!-- Copy Modal -->
   <div class="modal-overlay" id="copyModal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="copyModalTitle">
        <h3 id="copyModalTitle">Скопіюйте ваш результат</h3>
@@ -223,13 +242,12 @@
 
   <script>
     (function(){
-      const total = 5;
-      let current = 0; // 1..5
+      const total = 8;
+      let current = 0; // 1..8
       let score = 0;
-      let questionAnswered = false; // блокує повторні кліки
-      let startTs = null; let timerId = null; let elapsed = 0; // сек
-
-      let attempts = [1, 1, 1, 1, 1, 1]; // [0] unused
+      let questionAnswered = false; 
+      let startTs = null; let elapsed = 0;
+      let attempts = [1, 1, 1, 1, 1, 1, 1, 1, 1];
 
       const progressBar = document.getElementById('progressBar');
       const modal = document.getElementById('modal');
@@ -237,16 +255,13 @@
       const modalTitle = document.getElementById('modalTitle');
       const modalText  = document.getElementById('modalText');
       const modalBtn   = document.getElementById('modalBtn');
-      const timePill = document.getElementById('timePill');
 
       const copyModal = document.getElementById('copyModal');
       const copyModalTextarea = document.getElementById('copyModalTextarea');
       const copyModalCloseBtn = document.getElementById('copyModalCloseBtn');
 
-      const sections = ['intro','q1','q2','q3','q4','q5','summary'];
-
-      const answers = [null, null, null, null, null, null]; // 1..5 -> {choiceText, correct, comment, attempts}
-
+      const sections = ['intro','q1','q2','q3','q4','q5','q6','q7', 'q8', 'summary'];
+      
       const feedback = {
         q1: {
           good: { title: 'Чудово!', text: 'Доброчесність = чесність, самостійність і повага до авторства.' },
@@ -287,6 +302,30 @@
             '3': { title: 'Погана ідея', text: 'Масове поширення готових робіт лише погіршує ситуацію та знецінює навчання.' },
             '4': { title: 'Це змова', text: 'Така "взаємодопомога" є формою шахрайства і серйозним порушенням правил.' }
           }
+        },
+        q6: {
+          good: { title: 'Абсолютно вірно!', text: 'Повторне використання власної роботи без дозволу є самоплагіатом. Кожне завдання має бути унікальним.' },
+          bad: {
+            '1': { title: 'Ризикована стратегія', text: 'Справа не в тому, чи дізнається викладач, а в чесності. Це порушення правил.' },
+            '2': { title: 'Не зовсім', text: 'Хоча це ваша робота, ви вже отримали за неї оцінку. Повторна здача знецінює процес навчання.' },
+            '4': { title: 'Це маскування', text: 'Незначні зміни не роблять роботу новою. Ідея та структура залишаються тими ж, що є формою самоплагіату.' }
+          }
+        },
+        q7: {
+          good: { title: 'Саме так!', text: 'Допомога — це спільне обговорення та пояснення. Кожен має писати свою роботу самостійно.' },
+          bad: {
+            '2': { title: 'Це списування', text: 'Якщо завдання індивідуальне, здавати однакові роботи заборонено, навіть якщо ви працювали разом.' },
+            '3': { title: 'Межа є', text: 'Доброчесність важливіша за оцінки. "Командний обман" все одно залишається обманом.' },
+            '4': { title: 'Допомога має бути безкорисною', text: 'Справжня допомога не передбачає послуги у відповідь. Академічні "борги" — це шлях до недоброчесності.' }
+          }
+        },
+        q8: {
+          good: { title: 'Правильно.', text: 'Наслідки можуть бути дуже серйозними, впливаючи на репутацію та майбутнє студента.' },
+          bad: {
+            '1': { title: 'Не тільки', text: 'Це лише один із можливих наслідків. Залежно від тяжкості порушення, санкції можуть бути набагато суворішими.' },
+            '2': { title: 'Ризиковано', text: 'Сподіватися на "авось" не варто. Порушення можуть виявити і через роки, що зашкодить вашій репутації.' },
+            '4': { title: 'Не лише', text: 'Зіпсовані стосунки — це найменша з проблем. Серйозні порушення мають офіційні наслідки.' }
+          }
         }
       };
 
@@ -303,27 +342,13 @@
         progressBar.style.width = pct + '%';
         progressBar.textContent = `Готово: ${pct}%`;
       }
-
+      
       function fmtTime(sec){ const m = String(Math.floor(sec/60)).padStart(2,'0'); const s = String(sec%60).padStart(2,'0'); return `${m}:${s}`; }
 
-      function startTimer(){
-        startTs = Date.now();
-        if(timerId) clearInterval(timerId);
-        timerId = setInterval(()=>{ elapsed = Math.floor((Date.now()-startTs)/1000); timePill.textContent = fmtTime(elapsed); }, 500);
-      }
-      function stopTimer(){ if(timerId) clearInterval(timerId); timerId=null; }
-
-      function openModal(ok, choiceId, chosenText){
+      function openModal(ok, choiceId){
         lastAnswerCorrect = ok;
         const key = 'q'+current;
         const f = ok ? feedback[key].good : feedback[key].bad[choiceId];
-
-        answers[current] = { 
-          choiceText: chosenText, 
-          correct: ok, 
-          comment: f.text,
-          attempts: attempts[current]
-        };
 
         if(ok) score++;
         
@@ -345,62 +370,52 @@
       }
       function closeCopyModal() { copyModal.style.display = 'none'; }
 
-      function buildSummary(){
-        const tbody = document.querySelector('#reviewTable tbody');
-        tbody.innerHTML = '';
-        for(let i=1; i<=total; i++){
-          const a = answers[i];
-          const tr = document.createElement('tr');
-          
-          const tdN = document.createElement('td'); 
-          tdN.textContent = i; 
-          tr.appendChild(tdN);
-          
-          const tdS = document.createElement('td'); 
-          tdS.textContent = a && a.correct ? '✅ Правильно' : '❌ Помилка'; 
-          tr.appendChild(tdS);
-          
-          const tdC = document.createElement('td'); 
-          tdC.textContent = a ? a.choiceText : '-'; 
-          tr.appendChild(tdC);
-
-          const tdA = document.createElement('td');
-          tdA.textContent = a && a.correct ? a.attempts : '-';
-          tdA.style.textAlign = 'center';
-          tr.appendChild(tdA);
-          
-          const tdM = document.createElement('td'); 
-          tdM.textContent = a ? a.comment : '-'; 
-          tr.appendChild(tdM);
-
-          tbody.appendChild(tr);
-        }
-      }
-
       function showSummary() {
-        stopTimer();
+        elapsed = Math.floor((Date.now()-startTs)/1000);
+        const totalAttempts = attempts.slice(1).reduce((sum, count) => sum + count, 0);
+
         const scoreCircle = document.getElementById('scoreCircle');
         const scoreLine = document.getElementById('scoreLine');
         const timeLine = document.getElementById('timeLine');
+        const attemptsLine = document.getElementById('attemptsLine');
+
         scoreCircle.textContent = `${score}/${total}`;
         timeLine.textContent = `Час проходження: ${fmtTime(elapsed)}`;
+        attemptsLine.textContent = `Загальна кількість спроб: ${totalAttempts}`;
         
         if (score === total) { scoreLine.textContent = 'Відмінний результат! Ви — знавець доброчесності.'; scoreCircle.className = 'score-circle'; }
         else if (score >= total * 0.6) { scoreLine.textContent = 'Гарний результат, але є що повторити.'; scoreCircle.className = 'score-circle medium'; }
         else { scoreLine.textContent = 'Варто переглянути матеріали ще раз.'; scoreCircle.className = 'score-circle low'; }
 
-        buildSummary();
         show('summary');
+      }
+
+      function shuffleChoices(questionBlock) {
+          const container = questionBlock.querySelector('.choices-container');
+          if (!container) return;
+
+          const choices = Array.from(container.children);
+          
+          for (let i = choices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [choices[i], choices[j]] = [choices[j], choices[i]];
+          }
+          
+          choices.forEach(choice => container.appendChild(choice));
       }
 
       // START
       document.getElementById('startBtn').addEventListener('click', ()=>{ 
         current = 1; 
         score = 0; 
-        elapsed = 0; 
-        attempts = [1, 1, 1, 1, 1, 1];
-        timePill.textContent='00:00'; 
-        startTimer(); 
+        attempts = [1, 1, 1, 1, 1, 1, 1, 1, 1];
+        startTs = Date.now();
+        
+        for (let i = 1; i <= total; i++) {
+          const qBlock = document.getElementById('q' + i);
+          if (qBlock) shuffleChoices(qBlock);
+        }
+
         setProgress(); 
         show('q1'); 
       });
@@ -412,7 +427,6 @@
           
           const ok = card.getAttribute('data-correct') === 'true';
           const choiceId = card.getAttribute('data-choice');
-          const chosenText = card.textContent.trim();
           
           if (!ok) {
             attempts[current]++;
@@ -422,7 +436,7 @@
           card.parentElement.querySelectorAll('.choice-card').forEach(c => c.classList.add('selected'));
           card.classList.add(ok ? 'correct' : 'incorrect');
 
-          setTimeout(() => openModal(ok, choiceId, chosenText), 300);
+          setTimeout(() => openModal(ok, choiceId), 300);
         });
       });
 
@@ -442,23 +456,14 @@
       document.getElementById('restartBtn').addEventListener('click', ()=>{ 
         current = 0; 
         score = 0; 
-        elapsed = 0; 
-        attempts = [1, 1, 1, 1, 1, 1];
-        answers.fill(null); 
-        timePill.textContent='00:00'; 
-        stopTimer(); 
+        attempts = [1, 1, 1, 1, 1, 1, 1, 1, 1];
         setProgress(); 
         show('intro'); 
       });
 
-      // THEME TOGGLE
-      const themeBtn = document.getElementById('themeBtn');
-      function applyTheme(){ const m = localStorage.getItem('theme')||'light'; if(m==='dark') document.body.classList.add('dark'); else document.body.classList.remove('dark'); themeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Світла тема' : '🌙 Нічна тема'; }
-      themeBtn.addEventListener('click', ()=>{ const isDark = document.body.classList.toggle('dark'); localStorage.setItem('theme', isDark?'dark':'light'); applyTheme(); });
-      
       // SHARE/COPY RESULT
       function buildShareText() {
-        const totalAttempts = answers.slice(1).reduce((sum, current) => sum + (current ? current.attempts : 0), 0);
+        const totalAttempts = attempts.slice(1).reduce((sum, count) => sum + count, 0);
         return `Квест "Академічна доброчесність":\n- Результат: ${score}/${total}\n- Час: ${fmtTime(elapsed)}\n- Загальна кількість спроб: ${totalAttempts}`;
       }
 
@@ -467,38 +472,9 @@
       });
       
       copyModalCloseBtn.addEventListener('click', closeCopyModal);
-
-      document.getElementById('shareBtn').addEventListener('click', async () => {
-        const shareText = buildShareText();
-        const shareData = {
-            title: 'Результат квесту: Академічна доброчесність',
-            text: shareText,
-        };
-
-        if (navigator.share) {
-            try {
-                await navigator.share(shareData);
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                   openCopyModal(shareText);
-                }
-            }
-        } else {
-            openCopyModal(shareText);
-        }
-      });
-
-      // --- INITIALIZATION ---
-      function initApp() {
-        applyTheme();
-        setProgress();
-        // Hide share button if not supported by the browser
-        if (!navigator.share) {
-          document.getElementById('shareBtn').style.display = 'none';
-        }
-      }
-
-      initApp();
+      
+      // INIT
+      setProgress();
     })();
   </script>
 </body>
