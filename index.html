@@ -57,19 +57,16 @@
       border-radius: 20px;
       padding: 3px;
       box-shadow: 0 4px 15px rgba(21, 39, 49, 0.15);
+      height: 36px;
+      display: flex;
+      align-items: center;
     }
     .progress-bar {
       width: 0%;
-      height: 28px;
+      height: 26px;
       border-radius: 14px;
-      color: #fff;
-      font-weight: 700;
       background: linear-gradient(90deg, var(--brand), var(--good));
-      text-align: center;
-      line-height: 28px;
       transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-      font-size: 0.85rem;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     /* Task Blocks */
@@ -241,7 +238,7 @@
   <!-- Progress Header -->
   <div class="progress-wrapper">
     <div class="progress-container">
-      <div class="progress-bar" id="progressBar">Старт: 0%</div>
+      <div class="progress-bar" id="progressBar"></div>
     </div>
   </div>
 
@@ -411,22 +408,59 @@
     function init() {
       document.getElementById('startBtn').addEventListener('click', startQuest);
       document.getElementById('modalBtn').addEventListener('click', handleModalNext);
-      document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+      document.getElementById('restartBtn').addEventListener('click', resetQuest);
       document.getElementById('copyBtn').addEventListener('click', shareResult);
       document.getElementById('copyCloseBtn').addEventListener('click', () => copyModal.style.display = 'none');
     }
 
+    /** * Алгоритм Fisher–Yates для справжньої рандомізації 
+     */
+    function shuffle(array) {
+      const newArr = [...array];
+      for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+      }
+      return newArr;
+    }
+
     function startQuest() {
       introSection.classList.add('hidden');
-      renderQuestion(0);
+      summarySection.classList.add('hidden');
+      currentIdx = 0;
+      score = 0;
+      attempts = 0;
       startTime = Date.now();
+      renderQuestion(0);
       updateProgress();
     }
 
+    function resetQuest() {
+      introSection.classList.remove('hidden');
+      summarySection.classList.add('hidden');
+      quizContainer.innerHTML = '';
+      currentIdx = 0;
+      score = 0;
+      attempts = 0;
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function updateProgress() {
-      const pct = Math.round((currentIdx / questions.length) * 100);
+      const total = questions.length;
+      let pct = 0;
+      
+      if (!introSection.classList.contains('hidden')) {
+        pct = 0;
+      } else if (!summarySection.classList.contains('hidden')) {
+        pct = 100;
+      } else {
+        // Прогрес тепер зафарбовується з першого кроку (1/8)
+        pct = Math.round(((currentIdx + 1) / total) * 100);
+      }
+      
       progressBar.style.width = pct + '%';
-      progressBar.textContent = `${pct}%`;
+      // Текст (відсотки) видалено за запитом користувача
     }
 
     function renderQuestion(idx) {
@@ -512,6 +546,8 @@
     function showSummary() {
       quizContainer.innerHTML = '';
       summarySection.classList.remove('hidden');
+      updateProgress();
+
       const timeSec = Math.floor((Date.now() - startTime) / 1000);
       
       document.getElementById('scoreCircle').textContent = `${score}/${questions.length}`;
@@ -532,7 +568,7 @@
         scoreCircle.className = "score-circle low";
       }
       
-      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function shareResult() {
@@ -544,10 +580,6 @@
       copyModal.style.display = 'grid';
       textarea.select();
       try { document.execCommand('copy'); } catch (err) {}
-    }
-
-    function shuffle(array) {
-      return [...array].sort(() => Math.random() - 0.5);
     }
 
     function fmtTime(s) {
